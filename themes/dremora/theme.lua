@@ -10,11 +10,11 @@ local theme                                     = {}
 
 theme.dir                                       = os.getenv("HOME") .. "/.config/awesome/themes/dremora"
 theme.wallpaper                                 = theme.dir .. "/wall.png"
-theme.wallpaper1                                = theme.dir .. "/wall1.png"
-theme.wallpaper2                                = theme.dir .. "/wall2.png"
+theme.wallpaper1                                = theme.dir .. "/wall2.png"
+theme.wallpaper2                                = theme.dir .. "/wall1.png"
 
-theme.font                                      = "Anonymice 10"
-theme.taglist_font                              = "Icons 10"
+theme.font                                      = "Anonymice 12"
+theme.taglist_font                              = "Anonymice 12"
 
 theme.fg_normal                                 = "#747474"
 theme.fg_focus                                  = "#DDDCFF"
@@ -22,14 +22,15 @@ theme.bg_normal                                 = "#121212"
 theme.bg_focus                                  = "#121212"
 theme.fg_urgent                                 = "#CC9393"
 theme.bg_urgent                                 = "#2A1F1E"
-theme.border_width                              = "0"
+theme.border_width                              = "1"
 theme.border_normal                             = "#121212"
-theme.border_focus                              = "#292929"
+theme.border_focus                              = "#559955"
+-- theme.border_focus                              = "#993333"
 theme.titlebar_bg_focus                         = "#292929"
 theme.taglist_fg_focus                          = "#dddcff"
-theme.taglist_bg_focus                          = "#121212"
+theme.taglist_bg_focus                          = "#292929"
 
-theme.menu_height                               = 16
+theme.menu_height                               = 18
 theme.menu_width                                = 130
 theme.menu_submenu_icon                         = theme.dir .. "/icons/submenu.png"
 
@@ -56,8 +57,9 @@ theme.layout_floating                           = theme.dir .. "/icons/floating.
 
 theme.tasklist_plain_task_name                  = true
 theme.tasklist_disable_icon                     = true
+theme.tasklist_bg_focus                         = "#822"
 
-theme.useless_gap                               = 10
+theme.useless_gap                               = 5
 
 theme.titlebar_close_button_focus               = theme.dir .. "/icons/titlebar/close_focus.png"
 theme.titlebar_close_button_normal              = theme.dir .. "/icons/titlebar/close_normal.png"

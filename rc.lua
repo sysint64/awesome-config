@@ -67,10 +67,11 @@ local terminal   = "xterm"
 local editor     = os.getenv("EDITOR") or "nano" or "vi"
 
 -- user defined
-local browser    = "chromium"
+local browser    = "firefox"
 local gui_editor = "emacs"
 local graphics   = "gimp"
-local tagnames   = { "ƀ", "Ƅ", "Ɗ", "ƈ", "ƙ" }
+-- local tagnames   = { "ƀ", "Ƅ", "Ɗ", "ƈ", "ƙ" }
+local tagnames   = { "1", "2", "3", "4", "5" }
 
 -- table of layouts to cover with awful.layout.inc, order matters.
 awful.layout.layouts = {
@@ -393,8 +394,8 @@ globalkeys = awful.util.table.join(
     awful.key({ altkey }, "p", function() os.execute("screenshot") end),
 
     -- Hotkeys
-    awful.key({ modkey,           }, "s",      hotkeys_popup.show_help,
-              {description="show help", group="awesome"}),
+    -- awful.key({ modkey,           }, "s",      hotkeys_popup.show_help,
+              -- {description="show help", group="awesome"}),
     -- Tag browsing
     awful.key({ modkey,           }, "Left",   awful.tag.viewprev,
               {description = "view previous", group = "tag"}),
@@ -404,10 +405,10 @@ globalkeys = awful.util.table.join(
               {description = "go back", group = "tag"}),
 
     -- Non-empty tag browsing
-    awful.key({ altkey }, "Left", function () lain.util.tag_view_nonempty(-1) end,
-              {description = "view  previous nonempty", group = "tag"}),
-    awful.key({ altkey }, "Right", function () lain.util.tag_view_nonempty(1) end,
-              {description = "view  previous nonempty", group = "tag"}),
+    -- awful.key({ altkey }, "Left", function () lain.util.tag_view_nonempty(-1) end,
+    --           {description = "view  previous nonempty", group = "tag"}),
+    -- awful.key({ altkey }, "Right", function () lain.util.tag_view_nonempty(1) end,
+    --           {description = "view  previous nonempty", group = "tag"}),
 
     -- Default client focus
     awful.key({ altkey, modkey     }, "j",
@@ -444,7 +445,8 @@ globalkeys = awful.util.table.join(
             awful.client.focus.bydirection("right")
             if client.focus then client.focus:raise() end
         end),
-    awful.key({ modkey,           }, "w", function () mymainmenu:show() end,
+
+    awful.key({ modkey,           }, "]", function () mymainmenu:show() end,
               {description = "show main menu", group = "awesome"}),
 
     -- Layout manipulation
@@ -610,8 +612,12 @@ globalkeys = awful.util.table.join(
 
     -- Default
     -- Prompt
-    awful.key({ modkey }, "r", function () awful.screen.focused().mypromptbox:run() end,
-              {description = "run prompt", group = "launcher"}),
+    -- awful.key({ modkey }, "r", function () awful.screen.focused().mypromptbox:run() end,
+              -- {description = "run prompt", group = "launcher"}),
+
+    awful.key({ modkey }, "r", function () awful.util.spawn("rofi -show run") end),
+    awful.key({ modkey }, "w", function () awful.util.spawn("rofi -show window") end),
+    awful.key({ modkey }, "s",function () awful.util.spawn("rofi -show ssh") end),
 
     awful.key({ modkey }, "x",
               function ()
@@ -775,46 +781,46 @@ client.connect_signal("manage", function (c)
 end)
 
 -- Add a titlebar if titlebars_enabled is set to true in the rules.
-client.connect_signal("request::titlebars", function(c)
-    -- buttons for the titlebar
-    local buttons = awful.util.table.join(
-        awful.button({ }, 1, function()
-            client.focus = c
-            c:raise()
-            awful.mouse.client.move(c)
-        end),
-        awful.button({ }, 3, function()
-            client.focus = c
-            c:raise()
-            awful.mouse.client.resize(c)
-        end)
-    )
+-- client.connect_signal("request::titlebars", function(c)
+--     -- buttons for the titlebar
+--     local buttons = awful.util.table.join(
+--         awful.button({ }, 1, function()
+--             client.focus = c
+--             c:raise()
+--             awful.mouse.client.move(c)
+--         end),
+--         awful.button({ }, 3, function()
+--             client.focus = c
+--             c:raise()
+--             awful.mouse.client.resize(c)
+--         end)
+--     )
 
-    awful.titlebar(c, {size = 16}) : setup {
-        { -- Left
-            awful.titlebar.widget.iconwidget(c),
-            buttons = buttons,
-            layout  = wibox.layout.fixed.horizontal
-        },
-        { -- Middle
-            { -- Title
-                align  = "center",
-                widget = awful.titlebar.widget.titlewidget(c)
-            },
-            buttons = buttons,
-            layout  = wibox.layout.flex.horizontal
-        },
-        { -- Right
-            awful.titlebar.widget.floatingbutton (c),
-            awful.titlebar.widget.maximizedbutton(c),
-            awful.titlebar.widget.stickybutton   (c),
-            awful.titlebar.widget.ontopbutton    (c),
-            awful.titlebar.widget.closebutton    (c),
-            layout = wibox.layout.fixed.horizontal()
-        },
-        layout = wibox.layout.align.horizontal
-    }
-end)
+--     awful.titlebar(c, {size = 16}) : setup {
+--         { -- Left
+--             awful.titlebar.widget.iconwidget(c),
+--             buttons = buttons,
+--             layout  = wibox.layout.fixed.horizontal
+--         },
+--         { -- Middle
+--             { -- Title
+--                 align  = "center",
+--                 widget = awful.titlebar.widget.titlewidget(c)
+--             },
+--             buttons = buttons,
+--             layout  = wibox.layout.flex.horizontal
+--         },
+--         { -- Right
+--             awful.titlebar.widget.floatingbutton (c),
+--             awful.titlebar.widget.maximizedbutton(c),
+--             awful.titlebar.widget.stickybutton   (c),
+--             awful.titlebar.widget.ontopbutton    (c),
+--             awful.titlebar.widget.closebutton    (c),
+--             layout = wibox.layout.fixed.horizontal()
+--         },
+--         layout = wibox.layout.align.horizontal
+--     }
+-- end)
 
 -- Enable sloppy focus, so that focus follows mouse.
 --[[
@@ -840,9 +846,5 @@ client.connect_signal("focus",
 client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
 -- }}}
 
-client.connect_signal("mouse::enter", function(c)
-    if awful.layout.get(c.screen) ~= awful.layout.suit.magnifier
-        and awful.client.focus.filter(c) then
-        client.focus = c
-    end
-end)
+awful.util.spawn("xrandr --output HDMI-0 --left-of DVI-I-3");
+awful.util.spawn("setxkbmap -model pc104 -layout us,ru -option grp:caps_toggle");
