@@ -18,6 +18,12 @@ local shape         = require("gears.shape")
 --local menubar       = require("menubar")
 local freedesktop   = require("freedesktop")
 local hotkeys_popup = require("awful.hotkeys_popup").widget
+local volume_widget = require("volume-widget")
+
+local volume = volume_widget:new({
+  backend="pulseaudio",
+})
+
 -- }}}
 
 -- {{{ Error handling
@@ -218,29 +224,124 @@ local batwidget = lain.widgets.bat({
 })
 
 -- ALSA volume
+-- local volicon = wibox.widget.imagebox(beautiful.vol)
+-- local alsabar = lain.widgets.alsabar({
+--     width = 59, border_width = 0, ticks = true, ticks_size = 6, step = "2%",
+--     --togglechannel = "IEC958,3",
+--     settings = function()
+--         if volume_now.status == "off" then
+--             volicon:set_image(beautiful.vol_mute)
+--         elseif volume_now.level == 0 then
+--             volicon:set_image(beautiful.vol_no)
+--         elseif volume_now.level <= 50 then
+--             volicon:set_image(beautiful.vol_low)
+--         else
+--             volicon:set_image(beautiful.vol)
+--         end
+--     end,
+--     colors = {
+--         background   = beautiful.bg_normal,
+--         mute         = red,
+--         unmute       = beautiful.fg_normal
+--     }
+-- })
+
 local volicon = wibox.widget.imagebox(beautiful.vol)
-local volume = lain.widgets.alsabar({
-    width = 59, border_width = 0, ticks = true, ticks_size = 6, step = "2%",
-    --togglechannel = "IEC958,3",
-    settings = function()
-        if volume_now.status == "off" then
-            volicon:set_image(beautiful.vol_mute)
-        elseif volume_now.level == 0 then
-            volicon:set_image(beautiful.vol_no)
-        elseif volume_now.level <= 50 then
-            volicon:set_image(beautiful.vol_low)
-        else
-            volicon:set_image(beautiful.vol)
-        end
-    end,
-    colors = {
-        background   = beautiful.bg_normal,
-        mute         = red,
-        unmute       = beautiful.fg_normal
-    }
-})
-local volumebg = wibox.container.background(volume.bar, "#474747", shape.rectangle)
-local volumewidget = wibox.container.margin(volumebg, 2, 7, 4, 4)
+local volume_bar = wibox.widget {
+    forced_height    = 1,
+    forced_width     = 60,
+    color            = "#A4CE8A",
+    background_color = beautiful.bg_normal,
+    margins          = 1,
+    paddings         = 1,
+    ticks            = false,
+    ticks_size       = 7,
+    widget           = wibox.widget.progressbar,
+    layout           = vertical and wibox.container.rotate
+}
+
+local extra_volume_bar = wibox.widget {
+    forced_height    = 1,
+    forced_width     = 31,
+    color            = "#ffCE8A",
+    background_color = beautiful.bg_normal,
+    margins          = 1,
+    paddings         = 1,
+    ticks            = false,
+    ticks_size       = 7,
+    widget           = wibox.widget.progressbar,
+    layout           = vertical and wibox.container.rotate
+}
+
+volume_bar:buttons(awful.util.table.join (
+      awful.button({}, 1, function()
+        awful.util.spawn_with_shell("pavucontrol")
+      end),
+      awful.button({}, 2, function()
+
+      end),
+      awful.button({}, 3, function()
+      end),
+      awful.button({}, 4, function()
+        volume:up()
+        update_volume_widgets()
+      end),
+      awful.button({}, 5, function()
+        volume:down()
+        update_volume_widgets()
+      end)
+))
+
+extra_volume_bar:buttons(awful.util.table.join (
+      awful.button({}, 1, function()
+        awful.util.spawn_with_shell("pavucontrol")
+      end),
+      awful.button({}, 2, function()
+
+      end),
+      awful.button({}, 3, function()
+      end),
+      awful.button({}, 4, function()
+        volume:up()
+        update_volume_widgets()
+      end),
+      awful.button({}, 5, function()
+        volume:down()
+        update_volume_widgets()
+      end)
+))
+
+local volume_bg = wibox.container.background(volume_bar, "#474747", shape.rectangle)
+local volume_widget = wibox.container.margin(volume_bg, 2, 7, 4, 4)
+
+local extra_volume_bg = wibox.container.background(extra_volume_bar, "#474747", shape.rectangle)
+local extra_volume_widget = wibox.container.margin(extra_volume_bg, 2, 7, 4, 4)
+
+function update_volume_widgets()
+  local volume_value = tonumber(volume:getVolume())
+  volume_bar:set_value(volume_value/100)
+
+  if volume_value <= 0 then
+      volicon:set_image(beautiful.vol_no)
+  elseif volume_value == 0 then
+      volicon:set_image(beautiful.vol_no)
+  elseif volume_value <= 50 then
+      volicon:set_image(beautiful.vol_low)
+  else
+      volicon:set_image(beautiful.vol)
+  end
+
+  extra_volume_bar:set_value((volume_value - 100)/50)
+end
+
+update_volume_widgets()
+
+volume_timer = timer({ timeout = 5 })
+volume_timer:connect_signal("timeout", function()
+  update_volume_widgets()
+end)
+
+volume_timer:start()
 
 -- Weather
 local myweather = lain.widgets.weather({
@@ -372,7 +473,9 @@ awful.screen.connect_for_each_screen(function(s)
             fshome,
             -- batwidget,
             volicon,
-            volumewidget,
+            volume_widget,
+            extra_volume_widget,
+            -- volume.widget,
             mytextclock,
         },
     }
@@ -552,32 +655,19 @@ globalkeys = awful.util.table.join(
     end),
 
     -- ALSA volume control
-    awful.key({}, "XF86AudioRaiseVolume",
-        function ()
-            os.execute(string.format("amixer set %s 1%%+", volume.channel))
-            volume.update()
-        end),
-    awful.key({}, "XF86AudioLowerVolume",
-        function ()
-            os.execute(string.format("amixer set %s 1%%-", volume.channel))
-            volume.update()
-        end),
+    awful.key({}, "XF86AudioRaiseVolume", function()
+      volume:up()
+      update_volume_widgets()
+    end),
+    awful.key({}, "XF86AudioLowerVolume", function()
+      volume:down()
+      update_volume_widgets()
+    end),
     awful.key({}, "XF86AudioMute",
         function ()
             os.execute(string.format("amixer set %s toggle", volume.togglechannel or volume.channel))
             volume.update()
         end),
-    awful.key({ altkey, "Control" }, "m",
-        function ()
-            os.execute(string.format("amixer set %s 100%%", volume.channel))
-            volume.update()
-        end),
-
-		awful.key({ altkey, "Control" }, "0",
-				function ()
-						os.execute(string.format("amixer -q set %s 0%%", volume.channel))
-						volume.update()
-				end),
 
     -- MPD control
     awful.key({ altkey, "Control" }, "Up",
@@ -846,5 +936,5 @@ client.connect_signal("focus",
 client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
 -- }}}
 
-awful.util.spawn("xrandr --output HDMI-0 --left-of DVI-I-3");
+awful.util.spawn("xrandr --output VGA1 --right-of HDMI1");
 awful.util.spawn("setxkbmap -model pc104 -layout us,ru -option grp:caps_toggle");
