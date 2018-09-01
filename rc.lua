@@ -69,13 +69,14 @@ beautiful.init(os.getenv("HOME") .. "/.config/awesome/themes/dremora/theme.lua")
 local modkey     = "Mod4"
 local altkey     = "Mod1"
 -- local terminal   = "urxvtc" or "xterm"
-local terminal   = "xterm"
+local terminal   = "tilda"
 local editor     = os.getenv("EDITOR") or "nano" or "vi"
 
 -- user defined
 local browser    = "firefox"
 local gui_editor = "emacs"
 local graphics   = "gimp"
+local filemanager = "pcmanfm"
 -- local tagnames   = { "ƀ", "Ƅ", "Ɗ", "ƈ", "ƙ" }
 local tagnames   = { "1", "2", "3", "4", "5" }
 
@@ -514,13 +515,13 @@ globalkeys = awful.util.table.join(
     --           {description = "view  previous nonempty", group = "tag"}),
 
     -- Default client focus
-    awful.key({ altkey, modkey     }, "j",
+    awful.key({ altkey, modkey     }, "s",
         function ()
             awful.client.focus.byidx( 1)
         end,
         {description = "focus next by index", group = "client"}
     ),
-    awful.key({ altkey, modkey     }, "k",
+    awful.key({ altkey, modkey     }, "d",
         function ()
             awful.client.focus.byidx(-1)
         end,
@@ -528,22 +529,22 @@ globalkeys = awful.util.table.join(
     ),
 
     -- By direction client focus
-    awful.key({ modkey }, "j",
+    awful.key({ modkey }, "s",
         function()
             awful.client.focus.bydirection("down")
             if client.focus then client.focus:raise() end
         end),
-    awful.key({ modkey }, "k",
+    awful.key({ modkey }, "d",
         function()
             awful.client.focus.bydirection("up")
             if client.focus then client.focus:raise() end
         end),
-    awful.key({ modkey }, "h",
+    awful.key({ modkey }, "a",
         function()
             awful.client.focus.bydirection("left")
             if client.focus then client.focus:raise() end
         end),
-    awful.key({ modkey }, "l",
+    awful.key({ modkey }, "f",
         function()
             awful.client.focus.bydirection("right")
             if client.focus then client.focus:raise() end
@@ -553,13 +554,13 @@ globalkeys = awful.util.table.join(
               {description = "show main menu", group = "awesome"}),
 
     -- Layout manipulation
-    awful.key({ modkey, "Shift"   }, "j", function () awful.client.swap.byidx(  1)    end,
+    awful.key({ modkey, "Shift"   }, "s", function () awful.client.swap.byidx(  1)    end,
               {description = "swap with next client by index", group = "client"}),
-    awful.key({ modkey, "Shift"   }, "k", function () awful.client.swap.byidx( -1)    end,
+    awful.key({ modkey, "Shift"   }, "d", function () awful.client.swap.byidx( -1)    end,
               {description = "swap with previous client by index", group = "client"}),
-    awful.key({ modkey, "Control" }, "j", function () awful.screen.focus_relative( 1) end,
+    awful.key({ modkey, "Control" }, "s", function () awful.screen.focus_relative( 1) end,
               {description = "focus the next screen", group = "screen"}),
-    awful.key({ modkey, "Control" }, "k", function () awful.screen.focus_relative(-1) end,
+    awful.key({ modkey, "Control" }, "d", function () awful.screen.focus_relative(-1) end,
               {description = "focus the previous screen", group = "screen"}),
     awful.key({ modkey,           }, "u", awful.client.urgent.jumpto,
               {description = "jump to urgent client", group = "client"}),
@@ -588,29 +589,29 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey, "Shift" }, "r", function () lain.util.rename_tag() end),
     awful.key({ modkey, "Shift" }, "Left", function () lain.util.move_tag(1) end),   -- move to next tag
     awful.key({ modkey, "Shift" }, "Right", function () lain.util.move_tag(-1) end), -- move to previous tag
-    awful.key({ modkey, "Shift" }, "d", function () lain.util.delete_tag() end),
+    -- awful.key({ modkey, "Shift" }, "d", function () lain.util.delete_tag() end),
 
     -- Standard program
-    awful.key({ modkey,           }, "Return", function () awful.spawn(terminal) end,
+    awful.key({ modkey,           }, "t", function () awful.spawn(terminal) end,
               {description = "open a terminal", group = "launcher"}),
-    awful.key({ modkey, "Control" }, "r", awesome.restart,
+    awful.key({ modkey, "Control" }, "Escape", awesome.restart,
               {description = "reload awesome", group = "awesome"}),
     awful.key({ modkey, "Shift"   }, "q", awesome.quit,
               {description = "quit awesome", group = "awesome"}),
 
-    awful.key({ altkey, "Shift"   }, "l",     function () awful.tag.incmwfact( 0.05)          end,
+    awful.key({ altkey, "Shift"   }, "f",     function () awful.tag.incmwfact( 0.05)          end,
               {description = "increase master width factor", group = "layout"}),
-    awful.key({ altkey, "Shift"   }, "h",     function () awful.tag.incmwfact(-0.05)          end,
+    awful.key({ altkey, "Shift"   }, "a",     function () awful.tag.incmwfact(-0.05)          end,
               {description = "decrease master width factor", group = "layout"}),
-    awful.key({ modkey, "Shift"   }, "h",     function () awful.tag.incnmaster( 1, nil, true) end,
+    awful.key({ modkey, "Shift"   }, "a",     function () awful.tag.incnmaster( 1, nil, true) end,
               {description = "increase the number of master clients", group = "layout"}),
-    awful.key({ modkey, "Shift"   }, "l",     function () awful.tag.incnmaster(-1, nil, true) end,
+    awful.key({ modkey, "Shift"   }, "f",     function () awful.tag.incnmaster(-1, nil, true) end,
               {description = "decrease the number of master clients", group = "layout"}),
-    awful.key({ modkey, "Control" }, "h",     function () awful.tag.incncol( 1, nil, true)    end,
+    awful.key({ modkey, "Control" }, "a",     function () awful.tag.incncol( 1, nil, true)    end,
               {description = "increase the number of columns", group = "layout"}),
-    awful.key({ modkey, "Control" }, "l",     function () awful.tag.incncol(-1, nil, true)    end,
+    awful.key({ modkey, "Control" }, "f",     function () awful.tag.incncol(-1, nil, true)    end,
               {description = "decrease the number of columns", group = "layout"}),
-    awful.key({ modkey,           }, "space", function () awful.layout.inc( 1)                end,
+    awful.key({ modkey,           }, "BackSpace", function () awful.layout.inc( 1)                end,
               {description = "select next", group = "layout"}),
     awful.key({ modkey, "Shift"   }, "space", function () awful.layout.inc(-1)                end,
               {description = "select previous", group = "layout"}),
@@ -630,12 +631,12 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey, }, "z", function () awful.screen.focused().quake:toggle() end),
 
     -- Widgets popups
-    awful.key({ altkey, }, "c", function () lain.widgets.calendar.show(7) end),
-    awful.key({ altkey, }, "h", function () fshome.show(7) end),
-    awful.key({ altkey, }, "w", function () myweather.show(7) end),
+    -- awful.key({ altkey, }, "c", function () lain.widgets.calendar.show(7) end),
+    -- awful.key({ altkey, }, "a", function () fshome.show(7) end),
+    -- awful.key({ altkey, }, "w", function () myweather.show(7) end),
 
     -- Calculator
-    awful.key({}, "XF86Calculator", function()
+    awful.key({ modkey }, "k", function()
           awful.util.spawn_with_shell("speedcrunch")
     end),
 
@@ -699,6 +700,7 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey }, "q", function () awful.spawn(browser) end),
     awful.key({ modkey }, "e", function () awful.spawn(gui_editor) end),
     awful.key({ modkey }, "g", function () awful.spawn(graphics) end),
+    awful.key({ modkey }, "c", function () awful.spawn(filemanager) end),
 
     -- Default
     -- Prompt
@@ -707,7 +709,7 @@ globalkeys = awful.util.table.join(
 
     awful.key({ modkey }, "r", function () awful.util.spawn("rofi -show run") end),
     awful.key({ modkey }, "w", function () awful.util.spawn("rofi -show window") end),
-    awful.key({ modkey }, "s",function () awful.util.spawn("rofi -show ssh") end),
+    -- awful.key({ modkey }, "s",function () awful.util.spawn("rofi -show ssh") end),
 
     awful.key({ modkey }, "x",
               function ()
@@ -734,7 +736,7 @@ globalkeys = awful.util.table.join(
 
 clientkeys = awful.util.table.join(
     awful.key({ altkey, "Shift"   }, "m",      lain.util.magnify_client                         ),
-    awful.key({ modkey,           }, "f",
+    awful.key({ modkey,           }, "l",
         function (c)
             c.fullscreen = not c.fullscreen
             c:raise()
@@ -936,5 +938,6 @@ client.connect_signal("focus",
 client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
 -- }}}
 
-awful.util.spawn("xrandr --output VGA1 --right-of HDMI1");
+awful.util.spawn("xrandr --output HDMI-0 --left-of DVI-I-3");
 awful.util.spawn("setxkbmap -model pc104 -layout us,ru -option grp:caps_toggle");
+awful.util.spawn("redshift -l 55.0084:82.9357");

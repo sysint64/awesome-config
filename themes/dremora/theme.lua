@@ -10,8 +10,8 @@ local theme                                     = {}
 
 theme.dir                                       = os.getenv("HOME") .. "/.config/awesome/themes/dremora"
 theme.wallpaper                                 = theme.dir .. "/wall.png"
-theme.wallpaper1                                = theme.dir .. "/wall2.png"
-theme.wallpaper2                                = theme.dir .. "/wall1.png"
+theme.wallpaper1                                = theme.dir .. "/wall1.png"
+theme.wallpaper2                                = theme.dir .. "/wall2.png"
 
 theme.font                                      = "Anonymice 12"
 theme.taglist_font                              = "Anonymice 12"
