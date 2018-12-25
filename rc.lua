@@ -68,15 +68,14 @@ beautiful.init(os.getenv("HOME") .. "/.config/awesome/themes/dremora/theme.lua")
 -- common
 local modkey     = "Mod4"
 local altkey     = "Mod1"
--- local terminal   = "urxvtc" or "xterm"
-local terminal   = "tilda"
+local terminal   = "lxterminal"
 local editor     = os.getenv("EDITOR") or "nano" or "vi"
 
 -- user defined
 local browser    = "firefox"
 local gui_editor = "emacs"
 local graphics   = "gimp"
-local filemanager = "pcmanfm"
+local filemanager = "thunar"
 -- local tagnames   = { "ƀ", "Ƅ", "Ɗ", "ƈ", "ƙ" }
 local tagnames   = { "1", "2", "3", "4", "5" }
 
@@ -707,7 +706,7 @@ globalkeys = awful.util.table.join(
     -- awful.key({ modkey }, "r", function () awful.screen.focused().mypromptbox:run() end,
               -- {description = "run prompt", group = "launcher"}),
 
-    awful.key({ modkey }, "r", function () awful.util.spawn("rofi -show run") end),
+    awful.key({ modkey }, "r", function () awful.util.spawn("rofi -show drun -modi drun") end),
     awful.key({ modkey }, "w", function () awful.util.spawn("rofi -show window") end),
     -- awful.key({ modkey }, "s",function () awful.util.spawn("rofi -show ssh") end),
 
@@ -938,6 +937,5 @@ client.connect_signal("focus",
 client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
 -- }}}
 
-awful.util.spawn("xrandr --output HDMI-0 --left-of DVI-I-3");
-awful.util.spawn("setxkbmap -model pc104 -layout us,ru -option grp:caps_toggle");
 awful.util.spawn("redshift -l 55.0084:82.9357");
+awful.spawn.with_shell("~/.config/awesome/autorun.sh");
