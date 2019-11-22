@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+
 ## run (only once) processes which spawn with the same name
 function run {
    if (command -v $1 && ! pgrep $1); then
@@ -36,3 +37,6 @@ run pamac-tray
 # blueman-applet and msm_notifier are not installed in minimal edition
 # run blueman-applet
 run msm_notifier
+run redshift -l 55.0084:82.9357
+run nitrogen --restore &
+run setxkbmap -layout us,ru -option grp:caps_toggle

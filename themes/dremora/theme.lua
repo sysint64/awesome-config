@@ -9,7 +9,7 @@
 local theme                                     = {}
 
 theme.dir                                       = os.getenv("HOME") .. "/.config/awesome/themes/dremora"
-theme.wallpaper                                 = theme.dir .. "/wall.png"
+theme.wallpaper                                 = theme.dir .. "/wall2.png"
 theme.wallpaper1                                = theme.dir .. "/wall1.png"
 theme.wallpaper2                                = theme.dir .. "/wall2.png"
 
@@ -59,7 +59,7 @@ theme.tasklist_plain_task_name                  = true
 theme.tasklist_disable_icon                     = true
 theme.tasklist_bg_focus                         = "#822"
 
-theme.useless_gap                               = 5
+theme.useless_gap                               = 0
 
 theme.titlebar_close_button_focus               = theme.dir .. "/icons/titlebar/close_focus.png"
 theme.titlebar_close_button_normal              = theme.dir .. "/icons/titlebar/close_normal.png"
