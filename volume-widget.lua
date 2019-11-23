@@ -65,7 +65,7 @@ function Volume:up()
 		if self.backend == "alsa" then
 			run("amixer set " .. self.device .. " " .. self.step .. "+")
 		elseif self.backend == "pulseaudio" then
-			run("pactl set-sink-volume " .. self.device .. " +" .. self.step .. "%");
+			run("pactl set-sink-volume $(pactl list short sinks | head -n1 | cut -f1) +" .. self.step .. "%");
 		end
 		self:update({})
 	end
@@ -75,7 +75,7 @@ function Volume:down()
 	if self.backend == "alsa" then
 		run("amixer set " .. self.device .. " " .. self.step .. "-")
 	elseif self.backend == "pulseaudio" then
-		run("pactl set-sink-volume " .. self.device .. " -" .. self.step .. "%");
+		run("pactl set-sink-volume $(pactl list short sinks | head -n1 | cut -f1) -" .. self.step .. "%");
 	end
 	self:update({})
 end
